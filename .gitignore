@@ -1,0 +1,32 @@
+# R history and workspace
+.Rhistory
+.RData
+.Rproj.user
+.Ruserdata
+
+# RStudio project files
+*.Rproj
+
+# knitr / rmarkdown output
+*.pdf
+*.html
+*_cache/
+*_files/
+
+# Temporary files
+*.tmp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large data files (download separately)
+*.csv
+!pizza.csv
+!r_exam.csv
+!download_festival.csv
+
+# Codebook PDFs (too large / not source code)
+codebook15_llcp.pdf
+BRFSS2015_650.csv
