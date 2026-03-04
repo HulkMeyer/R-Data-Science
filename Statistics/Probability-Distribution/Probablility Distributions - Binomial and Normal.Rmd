@@ -1,0 +1,133 @@
+---
+title: "Module 2 - Stat and Prob - Probability"
+author: "HulkMeyer"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Binomial Distribution Part 2 Video (10:55)
+
+
+```{r dbinom - Binomial setup}
+dbinom(x=4, size = 20, prob = 1/6) #The values need to be in this order, and you can leave the x, size and prob out and it still work but the numbers have to be in that order 
+```
+
+## Binomial Distribution with set inputs
+
+```{r binomial distribution then graphing those results}
+x <- seq(0,20,by=1)
+y <- dbinom(x,20,1/6)
+plot(x,y,type = 'h')
+```
+
+**If we change the parameters**
+
+```{r}
+x <- seq(0,20,by=1)
+y <- dbinom(x,20,1/2)
+plot(x,y,type = 'h')
+
+#output looks like the normal curve
+```
+
+
+
+```{r}
+x <- seq(0,100,by=1)
+y <- dbinom(x,100,1/2)
+plot(x,y,type = 'h')
+```
+
+**4 different fuctions that R provides for every probability distribution it implements**
+
+```{r density binomial function}
+dbinom(x=4, size = 20, prob = 1/6)
+```
+**looking at the other functions
+```{r probability of rolling multiple things}
+dbinom(x=4, size = 20, prob = 1/6)+
+  dbinom(x=3, size = 20, prob = 1/6)+
+  dbinom(x=2, size = 20, prob = 1/6)+
+  dbinom(x=1, size = 20, prob = 1/6)+
+  dbinom(x=0, size = 20, prob = 1/6)
+```
+**pbinom <- stand for cumlative probability
+```{r}
+pbinom(q=4, size = 20, prob = 1/6)
+#looks at a quarntile value (q=4) and then looks at the probability of being less than or equal to that value
+```
+**pbinom <- stand for cumlative probability
+
+**qbinom(q=4, size = 20, prob = 1/6)
+```{r}
+qbinom(p=0.75, size = 20, prob = 1/6)
+#quantile your specifying a particular probability and then your outcome is the corresponding percentile that is less than your
+```
+**This returns the value that is less than 75%.  This says you have a 75% chance that you will roll a 4 or less. This is counter to what we got in the pbinom = .7687.  So why?  
+```{r}
+pbinom(q=4, size = 20, prob = 1/6)
+pbinom(q=3, size = 20, prob = 1/6)
+```
+**Here we can see that 4 is .7687 and 3 is .5665, and .75 falls inbetween.  We would expect something like 3.8-3.9 as the answer, but the binomial distribution is a DISCRETE Distribution so it returns a whole number.  So the system rounded the 3.8-3.9 up to 4.  So be aware of this. 
+
+```{r random number generator}
+rbinom(n=100, size = 20, prob = 1/6)
+#generates random outputs for size n (100)
+```
+
+**4 functions are nbinom, pbinom, qbinom, rbinom
+
+
+
+# Normal Distribution Part 2 (7:07)
+
+Still have the same 4 functions but now the back end is changed - Arguements are slightly different (mean, std dev and x)
+dnorm() = Calculates the standard normal distribution
+              Calculations with dnorm() do not actually give probability, it is giving us probability density.  
+pnorm() = Calculates the cumlative normal distribution
+qnorm() = Give value needed to be less than the target percentage
+rnorm() = Generates 
+
+```{r}
+pnorm(q=0, mean = 0, sd = 1)
+```
+```{r}
+pnorm(q=1, mean = 0, sd = 1) - pnorm(q=-1, mean = 0, sd = 1)
+#calculated the probablity of being within 1 SD of the mean
+```
+
+```{r}
+pnorm(q=-1, mean = 0, sd = 1)
+```
+```{r}
+#finding the value that gives us the probability from above (.1586)
+qnorm(p=0.1586, mean = 0, sd = 1)
+```
+sd(.19,.22,.17,.71)
+```{r}
+x <- c(.19, .22, .17, .71)
+sd(x)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

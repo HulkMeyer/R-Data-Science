@@ -1,0 +1,199 @@
+---
+title: "OpenIntro Lab - Normal Distribution"
+author: "HulkMeyer"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# OpenIntro Lab - Normal Distribution
+
+## Libraries
+```{r}
+library(tidyverse)
+library(openintro)
+```
+
+## Data
+Will be looking at fastfood data 
+```{r}
+str(fastfood)
+```
+```{r}
+head(fastfood)
+```
+## Filtering the data by Restaurant
+```{r}
+mcdonalds <- fastfood %>%
+  filter(restaurant == "Mcdonalds")
+dairy_queen <- fastfood %>%
+  filter(restaurant == "Dairy Queen")
+```
+### Exercise 1
+Make a plot (or plots) to visualize the distributions of the amount of calories from fat of the options from these two restaurants. How do their centers, shapes, and spreads compare?
+#### McDonalds Plot Calories vs. Calories from Fat
+```{r}
+ggplot(data = mcdonalds, aes(x = calories, y=cal_fat)) +
+  geom_point()
+```
+#### Dairy Queen Calories vs. Calories from Fat
+```{r}
+ggplot(data = dairy_queen, aes(x = calories, y=cal_fat)) +
+  geom_point()
+```
+#### Deeper McDonalds Calculations
+```{r}
+McD_cal_mean <- mean(mcdonalds$calories)
+McD_cal_fat_mean <- mean(mcdonalds$cal_fat)
+McD_cal_sd <- sd(mcdonalds$calories)
+McD_cal_fat_sd <- sd(mcdonalds$cal_fat)
+```
+#### Deeper Dairy Queen Calculations
+```{r}
+DQ_cal_mean <- mean(dairy_queen$calories)
+DQ_cal_fat_mean <- mean(dairy_queen$cal_fat)
+DQ_cal_sd <- sd(dairy_queen$calories)
+DQ_cal_fat_sd <- sd(dairy_queen$cal_fat)
+```
+#### McDonalds historgram with normalized treadline for Calories from fat
+```{r}
+ggplot(data = mcdonalds, aes(x = cal_fat)) +
+  geom_blank() +
+  geom_histogram(binwidth = 20, aes(y = ..density..)) +
+  stat_function(fun = dnorm, args = c(mean = McD_cal_fat_mean, McD_cal_fat_sd), col = "tomato")
+```
+#### Dairy Queen Histogram with normalized trendline for Calories from fat
+```{r}
+ggplot(data = dairy_queen, aes(x = cal_fat)) +
+  geom_blank() +
+  geom_histogram(binwidth = 20, aes(y = ..density..)) +
+  stat_function(fun = dnorm, args = c(mean = DQ_cal_fat_mean, DQ_cal_fat_sd), col = "tomato")
+```
+### Exercise 2
+Based on the this plot, does it appear that the data follow a nearly normal distribution?
+  No the data in either case is not truly normally distributed 
+#### Constructing a Normal quantile to quantile graph
+##### McDonalds
+```{r}
+ggplot(data = mcdonalds, aes(sample = cal_fat)) +
+  geom_line(stat = "qq")
+```
+##### Dairy Queen
+```{r}
+ggplot(data = dairy_queen, aes(sample = cal_fat)) +
+  geom_line(stat = "qq")
+```
+##### Normal Sim for McD Cal from Fat
+```{r}
+set.seed(100)
+sim_norm_McD <- rnorm(n = nrow(mcdonalds), mean = McD_cal_fat_mean, sd = McD_cal_fat_sd)
+sim_norm_McD
+sim_norm_mean_McD <- mean(sim_norm_McD)
+sim_norm_sd_McD <- sd(sim_norm_McD)
+sim_norm_McD_df <- data.frame(sim_norm_McD)
+```
+
+
+##### Normal Sim for DQ Cal from Fat
+```{r}
+set.seed(100)
+sim_norm_dq <- rnorm(n = nrow(dairy_queen), mean = DQ_cal_fat_mean, sd = DQ_cal_fat_sd)
+sim_norm_dq
+sim_norm_mean_dq <- mean(sim_norm_dq)
+sim_norm_sd_dq <- sd(sim_norm_dq)
+sim_norm_dq_df <- data.frame(sim_norm_dq)
+```
+### Exercise 3
+Make a normal probability plot of sim_norm. Do all of the points fall on the line? How does this plot compare to the probability plot for the real data? (Since sim_norm is not a dataframe, it can be put directly into the sample argument and the data argument can be dropped.)
+#### Probability plots for sim_norm_McD
+```{r}
+qqnormsim(sample = cal_fat, data = dairy_queen)
+```
+### Exercise 4
+Does the normal probability plot for the calories from fat look similar to the plots created for the simulated data? That is, do the plots provide evidence that the calories from fat are nearly normal?
+Sim Normal McDonalds
+```{r}
+ggplot(data = sim_norm_McD_df, aes(x = sim_norm_McD)) +
+  geom_blank() +
+  geom_histogram(binwidth = 20, aes(y = ..density..)) +
+  stat_function(fun = dnorm, args = c(mean = sim_norm_mean_McD, sim_norm_sd_McD), col = "tomato")
+```
+Sim Normal Dairy Queen
+```{r}
+ggplot(data = sim_norm_dq_df, aes(x = sim_norm_dq)) +
+  geom_blank() +
+  geom_histogram(binwidth = 20, aes(y = ..density..)) +
+  stat_function(fun = dnorm, args = c(mean = sim_norm_mean_dq, sim_norm_sd_dq), col = "tomato")
+```
+Dairy Queen's normal plot is much closer to that of their acctual plot, leading to the idea that their menu is more normally distributed than McDonalds.  Who's actual plot is right skewed in comparison to what their sim normal should look like. 
+
+### Exercise 5
+Using the same technique, determine whether or not the calories from McDonald’s menu appear to come from a normal distribution.
+##### Simulating Calories for McDonalds
+```{r}
+set.seed(100)
+sim_norm_McD_cal <- rnorm(n = nrow(mcdonalds), mean = McD_cal_mean, sd = McD_cal_sd)
+sim_norm_McD_cal
+sim_norm_mean_McD_cal <- mean(sim_norm_McD_cal)
+sim_norm_sd_McD_cal <- sd(sim_norm_McD_cal)
+sim_norm_McD_df <- data.frame(sim_norm_McD_cal)
+ggplot(data = mcdonalds, aes(x = calories)) +
+  geom_blank() +
+  geom_histogram(binwidth = 20, aes(y = ..density..)) +
+  stat_function(fun = dnorm, args = c(mean = sim_norm_mean_McD_cal, sim_norm_sd_McD_cal), col = "tomato")
+```
+The above graph, shows the historgram of current McDonalds menu items and a simulated normal distribution of what they would look like if normalized.  from this data McDonalds menu is fairly normal.
+
+### Exercise 6
+Write out two probability questions that you would like to answer about any of the restaurants in this dataset. Calculate those probabilities using both the theoretical normal distribution as well as the empirical distribution (four probabilities in all). Which one had a closer agreement between the two methods?
+```{r}
+pnorm(q = 600, mean = DQ_cal_mean, sd = DQ_cal_sd)
+```
+```{r}
+dairy_queen %>%
+  filter(calories > 600) %>%
+  summarise(percent = n() / nrow(dairy_queen))
+```
+Since these two probabilities are not similar I would say no for calories they are not normal. 
+
+### Exercise 7
+Now let’s consider some of the other variables in the dataset. Out of all the different restaurants, which ones’ distribution is the closest to normal for sodium?
+```{r message=TRUE, warning=FALSE, paged.print=TRUE}
+sodium_mean <- mean(fastfood$sodium)
+sodium_sd <- sd(fastfood$sodium)
+ggplot(data = fastfood, aes(x = fastfood$sodium, group = fastfood$restaurant, color = fastfood$restaurant)) +
+  geom_blank() +
+  geom_histogram(binwidth = 100, aes(y = ..density..)) +
+  stat_function(fun = dnorm, args = c(mean = sodium_mean, sodium_sd), col = "tomato")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
